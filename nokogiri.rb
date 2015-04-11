@@ -3,8 +3,8 @@ require 'nokogiri'
 require 'open-uri'
  
 host = 'http://tv.so-net.ne.jp'
-url = host + '/chart/23.action?head=201504120000&'
-   
+url = host + '/chart/23.action?head=201504120000&span=24&chartWidth=950&cellHeight=3&sticky=true&descriptive=true&iepgType=0&buttonType=0 '
+
 html = open(url)
 doc = Nokogiri::HTML(html)
 
