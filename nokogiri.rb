@@ -13,6 +13,7 @@ end_time = "end:"
 title = "program-title:"
 subtitle = "program-subtitle:"
 performer = "performer:"
+subperformer = "subperformer:"
 id = "program-id:"
 genre = "genre-1:"
 subgenre = "subgenre-1:"
@@ -43,7 +44,7 @@ doc = Nokogiri::HTML(html)
 
 puts doc.css('a').length
 
-json = "{ "
+json = "[ "
 doc.css('a').each do |item|
   if /^\/iepg.tvpi/ =~ item[:href] then
     puts host+item[:href]
@@ -53,6 +54,7 @@ doc.css('a').each do |item|
     tv = tv_sjis.to_s.encode("UTF-8", "Shift_JIS")
     #Jsonに変換
     count = 0
+    json += "{"
     tv.each_line do |line|
       count += 1
       str = line.chomp
@@ -71,28 +73,42 @@ doc.css('a').each do |item|
         json += month + str[month.length+1..str.length] + ","
       elsif str.index(date) == 0 then
         p str[date.length+1..str.length]
+        json += date + str[date.length+1..str.length] + ","
       elsif str.index(start_time) == 0 then
         p str[start_time.length+1..str.length]
+        json += start_time + str[start_time.length+1..str.length] + ","
       elsif str.index(end_time) == 0 then
         p str[end_time.length+1..str.length]
+        json += end_time + str[end_time.length+1..str.length] + ","
       elsif str.index(title) == 0 then
         p str[title.length+1..str.length]
+        json += title + str[title.length+1..str.length] + ","
       elsif str.index(subtitle) == 0 then
         p str[subtitle.length+1..str.length]
+        json += subtitle + str[subtitle.length+1..str.length] + ","
       elsif str.index(performer) == 0 then
         p str[performer.length+1..str.length]
+        json += performer + str[performer.length+1..str.length] + ","
+      elsif str.index(subperformer) == 0 then
+        p str[subperformer.length+1..str.length]
+        json += subperformer + str[subperformer.length+1..str.length] + ","
       elsif str.index(id) == 0 then
         p str[id.length+1..str.length]
+        json += id + str[id.length+1..str.length] + ","
       elsif str.index(genre) == 0 then
         p str[genre.length+1..str.length]
+        json += genre + str[genre.length+1..str.length] + ","
       elsif str.index(subgenre) == 0 then
         p str[subgenre.length+1..str.length]
+        json += subgenre + str[subgenre.length+1..str.length] + ","
       elsif count == tv.each_line.count
-        p str[0..str.index(gomi)-2]
+        p str[0..str.index(gomi)-1]
+        json += "detail:" + str[0..str.index(gomi)-1]
       end
-      
-
     end
+    json += "}"
   end
 end
+json += "] "
 
+p "JSON =" + json
